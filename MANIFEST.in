@@ -1,0 +1,6 @@
+graft src
+graft examples
+graft demo
+include README.md LICENSE NOTICE SECURITY.md PRIVACY.md DATA_FLOW.md THREAT_MODEL.md THIRD_PARTY_NOTICES.md supported-platforms.md uninstall.md
+prune tests
+global-exclude *.pyc __pycache__
