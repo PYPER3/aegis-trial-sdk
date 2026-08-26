@@ -1,0 +1,2 @@
+[console_scripts]
+aegis-demo = aegis.demo:main

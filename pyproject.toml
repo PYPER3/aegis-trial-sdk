@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegis-trial-sdk"
+version = "0.1.1"
+description = "Local, detection-only AEGIS Trial SDK"
+requires-python = ">=3.11,<3.12"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{name = "Arca Futura"}]
+classifiers = ["Programming Language :: Python :: 3"]
+
+[project.optional-dependencies]
+pytorch = ["torch>=2"]
+transformers = ["transformers>=4.40"]
+
+[project.scripts]
+aegis-demo = "aegis.demo:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["aegis*"]
