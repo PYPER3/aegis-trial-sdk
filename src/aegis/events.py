@@ -6,7 +6,7 @@ from typing import Any
 
 @dataclass(frozen=True)
 class AegisEvent:
-    """An immutable local detection result for one training step."""
+    """An immutable local detection result; next-step text cannot intervene."""
 
     step: int
     anomaly_state: str

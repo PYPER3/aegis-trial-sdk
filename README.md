@@ -10,7 +10,7 @@ The initial live Trial release requires Linux x86_64 and CPython 3.11. The suppl
 Core wheel currently has the form:
 
 ```text
-aegis_trial_core-0.1.1-cp311-cp311-linux_x86_64.whl
+aegis_trial_core-0.1.2-cp311-cp311-linux_x86_64.whl
 ```
 
 Version numbers and filenames do not establish scientific qualification. Use
@@ -27,7 +27,7 @@ configuration supplied with your trial materials.
 Install both components into the same CPython 3.11 environment:
 
 ```bash
-python3.11 -m pip install /path/to/aegis_trial_core-0.1.1-cp311-cp311-linux_x86_64.whl
+python3.11 -m pip install /path/to/aegis_trial_core-0.1.2-cp311-cp311-linux_x86_64.whl
 python3.11 -m pip install aegis-trial-sdk
 ```
 
@@ -38,7 +38,7 @@ Before installation, check the Core wheel against the SHA-256 value supplied wit
 your trial delivery:
 
 ```bash
-echo "<supplied-sha256>  aegis_trial_core-0.1.1-cp311-cp311-linux_x86_64.whl" | sha256sum --check -
+echo "<supplied-sha256>  aegis_trial_core-0.1.2-cp311-cp311-linux_x86_64.whl" | sha256sum --check -
 ```
 
 The public SDK does not install or bundle the Core. Constructing `AegisMonitor`
@@ -79,7 +79,8 @@ combines every configured observation before producing the local event.
 
 - `anomaly_state`: a generic local state, such as `clear` or `detected`.
 - `detection_confidence`: a numeric confidence when available, otherwise `None`.
-- `recommended_next_step`: informational text for the caller.
+- `recommended_next_step`: informational text for the caller. In the Trial, it
+  does not select, authorize, or execute an intervention.
 - `detected`: a convenience property derived from `anomaly_state`.
 
 The Core's `signal_detected` decision field is not emitted as a separate public
@@ -97,3 +98,17 @@ event logs, and opens no network connections. See [DATA_FLOW.md](DATA_FLOW.md) a
 [PRIVACY.md](PRIVACY.md).
 
 `aegis-demo --preview` writes a clearly simulated evaluation-report preview.
+
+## Public SDK release integrity
+
+Every published SDK release should include a `SHA256SUMS` file alongside its
+wheel and source distribution. Verify the downloaded artifact against that
+file before installation:
+
+```bash
+sha256sum --check SHA256SUMS
+```
+
+`SHA256SUMS` covers the public SDK artifacts only. The separately supplied
+Trial Core has its own delivery manifest and SHA-256 value; never substitute
+one checksum for the other.

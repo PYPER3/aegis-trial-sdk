@@ -10,7 +10,7 @@ To run this script across multiple local GPUs (e.g., using torchrun):
 
 Install the public SDK and the separately supplied compatible Trial Core wheel into
 the same CPython 3.11 environment:
-    python3.11 -m pip install /path/to/aegis_trial_core-0.1.1-cp311-cp311-linux_x86_64.whl
+    python3.11 -m pip install /path/to/aegis_trial_core-0.1.2-cp311-cp311-linux_x86_64.whl
     python3.11 -m pip install aegis-trial-sdk
 
 This is an API integration example. It does not establish that a particular
