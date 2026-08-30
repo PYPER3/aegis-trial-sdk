@@ -1,6 +1,0 @@
-
-[pytorch]
-torch>=2
-
-[transformers]
-transformers>=4.40

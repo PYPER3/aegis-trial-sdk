@@ -4,3 +4,4 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+AEGIS_EVALUATION_RESULT.md
