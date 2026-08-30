@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AEGIS by Pyper³ · Training-Governance Infrastructure</title>
+<meta name="description" content="AEGIS is built to detect emerging training instability from internal training dynamics. Run the detection-only Trial inside your own environment, free.">
+<meta name="robots" content="noindex, nofollow">
+
+<!--
+  ============================================================================
+  WIRING NOTES FOR ISRAEL / ADRIAN
+  ============================================================================
+  1. TRIAL SIGNUP ENDPOINT: search for TRIAL_SIGNUP_ENDPOINT in <script> near
+     the bottom. Point it at a real backend route (e.g. Railway) once one
+     exists. Until then the form falls back to a pre-filled email so no lead
+     is ever lost.
+  2. SDK DOWNLOAD: the Integration code sample is labeled "conceptual"
+     because Adrian's real SDK API doesn't exist yet. Swap it for the real
+     thing when it's published, and change the CTA from "request access" to
+     a direct install / signed-download flow if Trial goes public.
+  3. This pass is a visual elevation only. Copy, structure, evidence numbers
+     and section order are unchanged from v1, everything below is the same
+     content with a stronger type system, real motion, and more depth.
+  ============================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:    #0A0A0A;
+  --ink2:   #2A2A2A;
+  --ink3:   #3A3A3A;
+  --ink4:   #606060;
+  --ink5:   #787878;
+  --paper:  #FAFAF8;
+  --paper2: #F4F3F0;
+  --paper3: #EEECEA;
+  --rule:   rgba(0,0,0,0.11);
+  --rule2:  rgba(0,0,0,0.06);
+  --accent: #0D5C8A;
+  --accent-soft: rgba(13,92,138,.09);
+  --teal:   #0B6E5C;
+  --teal-soft: rgba(11,110,92,.09);
+  --green:  #137A54;
+  --amber:  #9A5B0A;
+  --red:    #8B1A1A;
+  --accent-lt: #5CB8E8;
+  --teal-lt: #4FD3B0;
+  --green-lt: #5FE0A0;
+  --amber-lt: #E0A94E;
+  --red-lt: #F0897C;
+  --D: 'Bebas Neue', sans-serif;
+  --S: 'Newsreader', Georgia, serif;
+  --M: 'DM Mono', monospace;
+  --sh-sm: 0 1px 2px rgba(10,10,10,.05), 0 1px 1px rgba(10,10,10,.03);
+  --sh-md: 0 12px 28px -8px rgba(10,10,10,.14), 0 2px 6px rgba(10,10,10,.06);
+  --sh-lg: 0 30px 60px -18px rgba(10,10,10,.22);
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{ background:var(--paper); color:var(--ink); font-family:var(--S); -webkit-font-smoothing:antialiased; overflow-x:hidden; position:relative; }
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; } }
+
+/* film-grain texture, sits above everything, purely decorative */
+body::after{
+  content:''; position:fixed; inset:0; z-index:600; pointer-events:none;
+  opacity:.035; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a{ color:inherit; }
+::selection{ background:rgba(13,92,138,.18); }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+h1,h2,h3,.modal-title,.pl-name,blockquote{ text-wrap:balance; }
+p,li,.pillar-desc,.flow-desc,.onto-body,.GCd,.SL{ text-wrap:pretty; }
+
+.W{ max-width:1040px; margin:0 auto; padding:0 52px; }
+section{ border-bottom:1px solid var(--rule); position:relative; }
+.SH{ padding:104px 0 0; position:relative; }
+.SB{ padding-bottom:104px; }
+
+/* ghost sequence numerals — this page is a real funnel, the numbering means something */
+.ghost-num{ position:absolute; top:96px; right:52px; font-family:var(--D); font-size:clamp(90px,14vw,220px); line-height:1; color:var(--ink); opacity:.035; pointer-events:none; user-select:none; letter-spacing:0; z-index:0; }
+
+.SK{ font-family:var(--M); font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink5); margin-bottom:20px; display:flex; align-items:center; gap:10px; position:relative; z-index:1; }
+.SK::before{ content:''; width:18px; height:1px; background:var(--ink5); display:inline-block; }
+.ST{ font-family:var(--D); font-size:clamp(42px,5.6vw,70px); line-height:1.02; color:var(--ink); margin-bottom:30px; letter-spacing:.005em; position:relative; z-index:1; }
+.ST .a{ color:var(--accent); } .ST .t{ color:var(--teal); } .ST .g{ color:var(--green); }
+p{ font-size:16px; line-height:1.75; color:var(--ink2); margin-bottom:18px; max-width:640px; position:relative; z-index:1; }
+p.wide{ max-width:none; }
+p:last-child{ margin-bottom:0; }
+
+/* ============ NAV ============ */
+nav{ position:fixed; top:0; left:0; right:0; z-index:400; height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 52px; background:rgba(250,250,248,.78); backdrop-filter:blur(10px) saturate(1.4); border-bottom:1px solid transparent; transition:border-color .3s var(--ease), box-shadow .3s var(--ease), height .3s var(--ease); }
+nav.scrolled{ border-bottom-color:var(--rule); box-shadow:0 8px 24px -12px rgba(10,10,10,.1); height:54px; }
+.nid{ font-family:var(--D); font-size:23px; letter-spacing:.02em; color:var(--ink); display:flex; align-items:center; gap:1px; text-decoration:none; transition:color .2s; }
+.nid:hover{ color:var(--accent); }
+.nid sup{ font-size:11px; color:var(--accent); top:-11px; position:relative; }
+.npills{ display:flex; align-items:center; gap:2px; }
+.np{ position:relative; font-family:var(--M); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink4); text-decoration:none; padding:10px 15px; transition:color .18s; }
+.np::after{ content:''; position:absolute; left:15px; right:15px; bottom:6px; height:1px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .25s var(--ease); }
+.np:hover{ color:var(--ink); }
+.np:hover::after, .np.active::after{ transform:scaleX(1); }
+.np.active{ color:var(--ink); }
+.ncta{ font-family:var(--M); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--paper); background:var(--ink); padding:11px 22px; border:none; cursor:pointer; margin-left:12px; transition:background .2s, transform .2s, box-shadow .2s; }
+.ncta:hover{ background:var(--accent); transform:translateY(-1px); box-shadow:var(--sh-md); }
+.nburger{ display:none; background:none; border:none; cursor:pointer; padding:8px; }
+.nburger span{ display:block; width:20px; height:1px; background:var(--ink); margin:5px 0; }
+
+/* ============ HERO ============ */
+#hero{ min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:130px 0 0; position:relative; overflow:hidden; }
+.hero-bg{ position:absolute; inset:0; z-index:0; background:linear-gradient(165deg,var(--paper) 0%,var(--paper2) 55%,var(--paper3) 100%); }
+.hero-glow{ position:absolute; z-index:0; width:900px; height:900px; top:-420px; right:-320px; border-radius:50%; background:radial-gradient(circle,rgba(13,92,138,.10) 0%,rgba(13,92,138,0) 68%); filter:blur(10px); }
+.hero-glow2{ position:absolute; z-index:0; width:700px; height:700px; bottom:-380px; left:-260px; border-radius:50%; background:radial-gradient(circle,rgba(11,110,92,.08) 0%,rgba(11,110,92,0) 68%); }
+.hero-grid{ position:absolute; inset:0; z-index:0; opacity:.04; background-image:repeating-linear-gradient(0deg,var(--ink) 0px,transparent 1px,transparent 88px,var(--ink) 89px),repeating-linear-gradient(90deg,var(--ink) 0px,transparent 1px,transparent 88px,var(--ink) 89px); mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.15)); }
+.hero-inner{ position:relative; z-index:2; }
+.hero-eyebrow{ font-family:var(--M); font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--accent); margin-bottom:30px; display:flex; align-items:center; gap:10px; opacity:0; animation:riseIn 1.04s var(--ease) .13s forwards; }
+.hero-eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px var(--accent-soft); }
+h1.hero-h{ font-family:var(--D); font-size:clamp(58px,9.8vw,152px); line-height:.94; letter-spacing:0; color:var(--ink); max-width:1000px; margin-bottom:34px; opacity:0; animation:riseIn 1.17s var(--ease) .29s forwards; }
+h1.hero-h .flag{ text-decoration:underline; text-decoration-style:wavy; text-decoration-color:var(--red); text-decoration-thickness:3px; text-underline-offset:8px; }
+.hero-sub{ font-family:var(--S); font-size:clamp(19px,2.1vw,23px); font-weight:400; line-height:1.55; color:var(--ink2); max-width:600px; margin-bottom:16px; opacity:0; animation:riseIn 1.17s var(--ease) .44s forwards; }
+.hero-support{ font-size:14.5px; line-height:1.7; color:var(--ink4); max-width:560px; margin-bottom:46px; opacity:0; animation:riseIn 1.17s var(--ease) .57s forwards; }
+.hero-ctas{ display:flex; align-items:center; gap:28px; flex-wrap:wrap; margin-bottom:68px; opacity:0; animation:riseIn 1.17s var(--ease) .70s forwards; }
+@keyframes riseIn{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:translateY(0);} }
+
+.btn-primary{ font-family:var(--M); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--paper); background:var(--ink); padding:17px 32px; border:none; cursor:pointer; transition:background .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease); position:relative; }
+.btn-primary:hover{ background:var(--accent); transform:translateY(-2px); box-shadow:var(--sh-md); }
+.btn-secondary{ font-family:var(--M); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); background:transparent; padding:16px 31px; border:1px solid var(--ink); cursor:pointer; transition:background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease); text-decoration:none; display:inline-block; }
+.btn-secondary:hover{ background:var(--ink); color:var(--paper); transform:translateY(-2px); box-shadow:var(--sh-md); }
+.link-tert{ font-family:var(--M); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink4); text-decoration:none; border-bottom:1px solid var(--rule); padding-bottom:2px; transition:color .18s, border-color .18s; }
+.link-tert:hover{ color:var(--ink); border-color:var(--ink); }
+
+/* ============ SIGNATURE VIZ: signal vs. loss chart + exposure calculator ============ */
+.proof-grid{ display:grid; grid-template-columns:1.8fr 1fr; gap:1px; background:var(--rule); border:1px solid var(--rule); box-shadow:var(--sh-md); position:relative; z-index:2; margin-top:10px; }
+.chart-wrap{ background:var(--paper); padding:38px 36px 30px; }
+.chart-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:20px; flex-wrap:wrap; gap:8px; }
+.chart-label{ font-family:var(--M); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink5); }
+.chart-tag{ font-family:var(--M); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--amber); background:rgba(154,91,10,.08); border:1px solid rgba(154,91,10,.25); padding:3px 9px; }
+.chart-svg{ width:100%; height:auto; display:block; }
+.chart-axis{ font-family:var(--M); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink5); text-align:right; margin-top:8px; }
+.chart-legend{ display:flex; gap:28px; padding:18px 0 4px; flex-wrap:wrap; border-top:1px solid var(--rule2); margin-top:18px; }
+.chart-legend-item{ display:flex; align-items:center; gap:8px; font-family:var(--M); font-size:10.5px; letter-spacing:.04em; color:var(--ink3); }
+.chart-legend-swatch{ width:16px; height:2px; }
+.chart-legend-swatch.sig{ background:var(--accent); }
+.chart-legend-swatch.base{ background:var(--red); }
+.chart-legend-swatch.win{ background:var(--accent-soft); border:1px solid var(--accent); height:8px; }
+
+/* draw-on-scroll paths, deliberately slow: this is the page's one big demonstrative moment */
+.cpath{ fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:1000; stroke-dashoffset:1000; transition:stroke-dashoffset 3.4s var(--ease); }
+.cpath.sig{ stroke-width:3.5; }
+.chart-wrap.in-view .cpath{ stroke-dashoffset:0; }
+.carea{ opacity:0; transition:opacity 1.6s var(--ease) 1.8s; }
+.chart-wrap.in-view .carea{ opacity:1; }
+.cband{ opacity:0; transform-origin:left; transform:scaleX(0); transition:opacity 1s var(--ease) 2s, transform 2s var(--ease) 2s; }
+.chart-wrap.in-view .cband{ opacity:1; transform:scaleX(1); }
+.cmark{ opacity:0; transition:opacity .7s var(--ease); }
+.chart-wrap.in-view .cmark{ opacity:1; }
+.cmark circle.pulse{ animation:pulseDot 2.9s ease-in-out 1s infinite; }
+@keyframes pulseDot{ 0%,100%{ r:4.5; opacity:1;} 50%{ r:7.5; opacity:.35;} }
+
+/* ============ EXPOSURE CALCULATOR ============ */
+.calc-card{ background:var(--paper2); padding:38px 32px 30px; display:flex; flex-direction:column; }
+.calc-hint{ font-family:var(--M); font-size:10px; color:var(--ink5); line-height:1.6; margin:10px 0 22px; }
+.calc-field{ margin-bottom:14px; }
+.calc-field label{ display:block; font-family:var(--M); font-size:9px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink5); margin-bottom:6px; }
+.calc-field input{ width:100%; font-family:var(--M); font-size:14px; color:var(--ink); background:var(--paper); border:1px solid var(--rule); border-bottom-width:2px; padding:9px 12px; transition:border-color .2s; }
+.calc-field input:focus{ outline:none; border-color:var(--accent); }
+.calc-out{ border-top:1px solid var(--rule); margin-top:8px; padding-top:20px; }
+.calc-out-row{ margin-bottom:16px; }
+.calc-out-row:last-child{ margin-bottom:0; }
+.calc-out-label{ font-family:var(--M); font-size:9.5px; letter-spacing:.03em; text-transform:uppercase; color:var(--ink4); line-height:1.5; margin-bottom:7px; }
+.calc-out-num{ font-family:var(--D); font-size:36px; color:var(--ink); line-height:1; font-variant-numeric:tabular-nums; }
+.calc-out-row.sub .calc-out-num{ font-size:23px; color:var(--teal); }
+.calc-note{ font-family:var(--M); font-size:8.5px; color:var(--ink5); line-height:1.65; margin-top:18px; }
+
+/* trust strip */
+.trust-strip{ display:grid; grid-template-columns:repeat(3,1fr); background:var(--rule); border-top:1px solid var(--rule); position:relative; z-index:2; }
+.ts-cell{ background:var(--paper); padding:32px 32px; text-align:center; border-right:1px solid var(--rule); transition:background .2s; }
+.ts-cell:hover{ background:var(--paper2); }
+.ts-cell:last-child{ border-right:none; }
+.ts-num{ font-family:var(--D); font-size:48px; line-height:1; margin-bottom:6px; font-variant-numeric:tabular-nums; }
+.ts-num.a{ color:var(--accent); } .ts-num.g{ color:var(--green); } .ts-num.t{ color:var(--teal); }
+.ts-label{ font-family:var(--M); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink4); line-height:1.6; }
+
+/* ============ PULL QUOTE ============ */
+.pull-quote{ padding:96px 0; }
+.pq-inner{ max-width:760px; margin:0 auto; padding-left:36px; border-left:3px solid var(--accent); position:relative; }
+.pq-inner::before{ content:'\201C'; position:absolute; left:-6px; top:-46px; font-family:var(--D); font-size:120px; color:var(--accent); opacity:.14; line-height:1; }
+.pq-text{ font-family:var(--S); font-style:italic; font-weight:400; font-size:clamp(22px,3vw,32px); line-height:1.5; color:var(--ink2); }
+.pq-cite{ font-family:var(--M); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink5); margin-top:22px; }
+
+/* ============ RISK REVERSAL ============ */
+.pillars{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); margin:40px 0 0; box-shadow:var(--sh-sm); }
+.pillar{ background:var(--paper); padding:32px 28px; transition:background .25s, transform .25s var(--ease), box-shadow .25s var(--ease); position:relative; }
+.pillar:hover{ background:var(--paper2); transform:translateY(-4px); box-shadow:var(--sh-md); z-index:2; }
+.pillar-mark{ font-family:var(--M); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
+.pillar-name{ font-family:var(--D); font-size:27px; color:var(--ink); margin-bottom:11px; line-height:1.08; }
+.pillar-desc{ font-size:13.5px; line-height:1.65; color:var(--ink3); }
+
+/* ============ INTEGRATION / CODE ============ */
+.code-block{ background:var(--ink); border:1px solid var(--ink); margin:34px 0; position:relative; box-shadow:var(--sh-lg); transition:box-shadow .3s; }
+.code-block:hover{ box-shadow:0 30px 70px -16px rgba(13,92,138,.28); }
+.code-head{ display:flex; justify-content:space-between; align-items:center; padding:13px 20px; border-bottom:1px solid rgba(255,255,255,.1); }
+.code-dots{ display:flex; gap:6px; }
+.code-dots span{ width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.15); }
+.code-tag{ font-family:var(--M); font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--green-lt); background:rgba(95,224,160,.14); border:1px solid rgba(95,224,160,.4); padding:3px 8px; }
+.code-copy{ font-family:var(--M); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.62); background:none; border:none; cursor:pointer; transition:color .2s; }
+.code-copy:hover{ color:#fff; }
+pre.code-body{ padding:26px 26px 30px; overflow-x:auto; font-family:var(--M); font-size:13px; line-height:1.95; color:#F1F0EC; }
+.code-body .c-com{ color:#93A99B; }
+.code-body .c-kw{ color:#93C3E8; }
+.code-body .c-str{ color:#DBB988; }
+.code-body .c-fn{ color:#AEE0BC; }
+.code-cursor{ display:inline-block; width:7px; height:14px; background:var(--green-lt); margin-left:2px; vertical-align:middle; animation:blink 1.3s step-end infinite; }
+@keyframes blink{ 50%{ opacity:0; } }
+
+/* ============ CAPABILITIES ============ */
+.G2{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--rule); border:1px solid var(--rule); margin:40px 0 26px; box-shadow:var(--sh-sm); }
+.GC{ background:var(--paper); padding:32px 30px; transition:background .25s; }
+.GC.can:hover{ background:var(--teal-soft); }
+.GC.cannot:hover{ background:rgba(139,26,26,.045); }
+.GCt{ font-family:var(--M); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink5); margin-bottom:18px; }
+.GC.can .GCt{ color:var(--green); }
+.GC.cannot .GCt{ color:var(--red); }
+.GC ul{ list-style:none; }
+.GC li{ font-size:13.5px; line-height:1.7; color:var(--ink3); padding:9px 0; border-bottom:1px solid var(--rule2); display:flex; gap:11px; transition:transform .2s var(--ease); }
+.GC li:hover{ transform:translateX(3px); }
+.GC li:last-child{ border-bottom:none; }
+.GC li::before{ font-family:var(--M); font-size:13px; flex-shrink:0; margin-top:1px; }
+.GC.can li::before{ content:'+'; color:var(--green); font-weight:600; }
+.GC.cannot li::before{ content:'\2013'; color:var(--red); font-weight:600; }
+
+/* security disclosure: real content, no dead link */
+.sec-disclosure summary{ cursor:pointer; list-style:none; display:inline-flex; align-items:center; gap:7px; }
+.sec-disclosure summary::-webkit-details-marker{ display:none; }
+.sec-disclosure .chev{ display:inline-block; transition:transform .25s var(--ease); }
+.sec-disclosure[open] .chev{ transform:rotate(90deg); }
+.sec-body{ margin-top:18px; padding:22px 26px; background:var(--paper2); border-left:3px solid var(--accent); }
+.sec-body ul{ list-style:none; }
+.sec-body li{ font-size:13.5px; line-height:1.7; color:var(--ink3); padding:6px 0 6px 18px; position:relative; }
+.sec-body li::before{ content:'\2022'; position:absolute; left:0; color:var(--accent); }
+
+/* ============ SIGNAL / EVENT CARD ============ */
+.event-card{ margin:36px 0; border:1px solid var(--rule); background:var(--ink); color:#E8E6E1; box-shadow:var(--sh-lg); }
+.event-head{ padding:15px 22px; border-bottom:1px solid rgba(255,255,255,.1); display:flex; justify-content:space-between; align-items:center; }
+.event-title{ font-family:var(--M); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#E8E6E1; display:flex; align-items:center; gap:9px; }
+.event-title .rec{ width:7px; height:7px; border-radius:50%; background:var(--amber-lt); animation:pulseDot 2.4s ease-in-out infinite; }
+.event-status{ font-family:var(--M); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--amber-lt); }
+.event-body{ padding:28px 24px; font-family:var(--M); font-size:12.5px; line-height:2.05; }
+.event-row{ display:grid; grid-template-columns:220px 1fr; gap:16px; opacity:0; transform:translateX(-6px); transition:opacity .65s var(--ease), transform .65s var(--ease); }
+.event-card.in-view .event-row{ opacity:1; transform:translateX(0); }
+.event-row .k{ color:rgba(232,230,225,.78); white-space:nowrap; }
+.event-row .v{ color:#F5F4F0; }
+.event-row .v.hl{ color:var(--green-lt); font-weight:500; }
+.event-divider{ height:1px; background:rgba(255,255,255,.08); margin:14px 0; }
+.event-foot{ padding:13px 22px; background:rgba(255,255,255,.03); border-top:1px solid rgba(255,255,255,.08); font-family:var(--M); font-size:9px; letter-spacing:.04em; color:rgba(232,230,225,.65); }
+
+/* ============ EVIDENCE ============ */
+.SG4{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); margin:32px 0; box-shadow:var(--sh-sm); }
+.SC{ background:var(--paper); padding:28px 22px; transition:background .2s, transform .2s var(--ease); }
+.SC:hover{ background:var(--paper2); transform:translateY(-3px); }
+.SN{ font-family:var(--D); font-size:44px; line-height:1; margin-bottom:7px; font-variant-numeric:tabular-nums; }
+.SN.a{ color:var(--accent); } .SN.t{ color:var(--teal); } .SN.g{ color:var(--green); } .SN.amb{ color:var(--amber); }
+.SL{ font-family:var(--M); font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink4); line-height:1.55; margin-bottom:9px; }
+.SS{ font-family:var(--M); font-size:8.5px; color:var(--ink5); letter-spacing:.02em; }
+
+/* mini bar comparison: smoke-run vs oracle ceiling */
+.bar-compare{ margin:34px 0; border:1px solid var(--rule); padding:26px 28px; background:var(--paper2); }
+.bar-compare-head{ font-family:var(--M); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink5); margin-bottom:20px; }
+.bar-row{ margin-bottom:18px; }
+.bar-row:last-child{ margin-bottom:0; }
+.bar-row-label{ display:flex; justify-content:space-between; font-family:var(--M); font-size:11px; color:var(--ink3); margin-bottom:7px; }
+.bar-row-label .num{ font-variant-numeric:tabular-nums; }
+.bar-track{ height:10px; background:var(--paper3); border:1px solid var(--rule); position:relative; overflow:hidden; }
+.bar-fill{ height:100%; width:0; transition:width 1.8s var(--ease); }
+.bar-fill.smoke{ background:var(--teal); }
+.bar-fill.oracle{ background:var(--ink4); }
+.bar-compare.in-view .bar-fill.smoke{ width:58.3%; }
+.bar-compare.in-view .bar-fill.oracle{ width:98.6%; }
+.bar-compare-foot{ font-family:var(--M); font-size:9px; color:var(--ink5); margin-top:18px; line-height:1.6; }
+
+/* evidence tiering: keeps detection / governance / historical claims visually separate */
+.ev-tier{ margin-bottom:42px; }
+.ev-tier:last-of-type{ margin-bottom:32px; }
+.ev-tier-label{ display:flex; align-items:center; gap:10px; font-family:var(--M); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink3); margin-bottom:16px; }
+.ev-dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.ev-dot.accent{ background:var(--accent); }
+.ev-dot.teal{ background:var(--teal); }
+.ev-dot.amber{ background:var(--amber); }
+
+.CL{ background:var(--paper2); border-left:3px solid var(--accent); padding:24px 28px; margin:30px 0; }
+.CL.r{ border-left-color:var(--red); background:rgba(139,26,26,.04); }
+.CLt{ font-size:14px; line-height:1.7; color:var(--ink2); margin-bottom:6px; max-width:none; }
+.CLd{ font-family:var(--M); font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink5); }
+
+/* ============ TRIAL REPORT ============ */
+.report-card{ border:1px solid var(--rule); margin:34px 0; box-shadow:var(--sh-md); }
+.report-head{ padding:17px 26px; background:var(--paper2); border-bottom:1px solid var(--rule); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+.report-title{ font-family:var(--M); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink4); }
+.report-illustrative{ font-family:var(--M); font-size:8.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--amber); background:rgba(154,91,10,.08); border:1px solid rgba(154,91,10,.25); padding:3px 8px; }
+.report-body{ display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--rule); }
+.report-cell{ background:var(--paper); padding:24px 16px; text-align:center; transition:background .2s; }
+.report-cell:hover{ background:var(--paper2); }
+.report-num{ font-family:var(--D); font-size:36px; color:var(--ink); line-height:1; margin-bottom:7px; font-variant-numeric:tabular-nums; }
+.report-lbl{ font-family:var(--M); font-size:8px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink4); line-height:1.5; }
+.report-foot{ padding:18px 26px; border-top:1px solid var(--rule); font-size:14.5px; color:var(--ink2); }
+
+/* ============ FULL AEGIS / ONTOLOGY ============ */
+.flow-row{ display:grid; grid-template-columns:1fr 44px 1fr; align-items:stretch; margin:38px 0; border:1px solid var(--rule); box-shadow:var(--sh-sm); }
+.flow-cell{ padding:30px 28px; background:var(--paper2); transition:background .2s; }
+.flow-cell.lead{ background:var(--paper3); border-left:2px solid var(--accent); }
+.flow-cell.lead:hover{ background:#e9e5df; }
+.flow-tag{ font-family:var(--M); font-size:8.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink5); margin-bottom:9px; }
+.flow-name{ font-family:var(--D); font-size:27px; margin-bottom:7px; }
+.flow-name.a{ color:var(--accent); }
+.flow-desc{ font-size:13px; line-height:1.6; color:var(--ink3); }
+.flow-arrow{ display:flex; align-items:center; justify-content:center; background:var(--paper3); height:100%; font-size:20px; color:var(--ink5); }
+
+.onto{ display:grid; grid-template-columns:1fr 30px 1fr 30px 1fr; margin:38px 0; border:1px solid var(--rule); box-shadow:var(--sh-sm); }
+.onto-step{ padding:28px 24px; background:var(--paper); transition:transform .2s var(--ease), box-shadow .2s; position:relative; }
+.onto-step:hover{ transform:translateY(-4px); box-shadow:var(--sh-md); z-index:2; }
+.onto-step.s1{ border-left:3px solid var(--accent); }
+.onto-step.s2{ border-left:3px solid var(--teal); }
+.onto-step.s3{ border-left:3px solid var(--green); }
+.onto-num{ font-family:var(--D); font-size:38px; margin-bottom:5px; line-height:1; background:linear-gradient(135deg,var(--ink5),var(--ink3)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.onto-head{ font-family:var(--D); font-size:21px; margin-bottom:9px; }
+.onto-head.a{ color:var(--accent); } .onto-head.t{ color:var(--teal); } .onto-head.g{ color:var(--green); }
+.onto-body{ font-size:12.5px; line-height:1.6; color:var(--ink3); }
+.onto-arr{ display:flex; align-items:center; justify-content:center; background:var(--paper3); font-size:18px; color:var(--ink5); }
+
+/* ============ PLATFORM PIPELINE ============ */
+.pipeline{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); margin:38px 0; box-shadow:var(--sh-sm); }
+.pl{ background:var(--paper); padding:28px 22px; display:flex; flex-direction:column; transition:transform .2s var(--ease), box-shadow .2s; }
+.pl:hover{ transform:translateY(-4px); box-shadow:var(--sh-md); z-index:2; }
+.pl.lead{ background:var(--paper3); border-top:2px solid var(--accent); }
+.pl-status{ font-family:var(--M); font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:13px; }
+.pl-status.confirmed{ color:var(--green); }
+.pl-status.early{ color:var(--amber); }
+.pl-status.build{ color:var(--accent); }
+.pl-status.research{ color:var(--ink5); }
+.pl-name{ font-family:var(--D); font-size:25px; margin-bottom:9px; color:var(--ink); }
+.pl-desc{ font-size:12.5px; line-height:1.6; color:var(--ink3); flex-grow:1; }
+.pl-arrow-row{ display:flex; justify-content:center; margin:-1px 0 -1px; }
+
+/* ============ FINAL CTA ============ */
+.final-cta{ background:var(--ink); color:var(--paper); padding:112px 52px; text-align:center; position:relative; overflow:hidden; }
+.final-cta::before{ content:''; position:absolute; width:800px; height:800px; top:-400px; left:50%; transform:translateX(-50%); border-radius:50%; background:radial-gradient(circle,rgba(13,92,138,.16) 0%,rgba(13,92,138,0) 70%); pointer-events:none; }
+.final-cta .SK{ justify-content:center; color:rgba(250,250,248,.68); }
+.final-cta .SK::before{ background:rgba(250,250,248,.55); }
+.final-cta .ST{ color:var(--paper); margin:0 auto 28px; }
+.final-cta .hero-sub{ color:rgba(250,250,248,.88); max-width:520px; margin:0 auto 44px; }
+.final-cta-btns{ display:flex; gap:24px; justify-content:center; margin-bottom:40px; flex-wrap:wrap; position:relative; z-index:1; }
+.final-cta .btn-secondary{ border-color:rgba(250,250,248,.4); color:var(--paper); }
+.final-cta .btn-secondary:hover{ background:var(--paper); color:var(--ink); }
+.final-reassure{ font-family:var(--M); font-size:10px; letter-spacing:.04em; color:rgba(250,250,248,.62); position:relative; z-index:1; }
+
+footer{ padding:44px 52px 38px; display:flex; flex-direction:column; gap:20px; }
+.foot-top{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+.fi{ font-family:var(--M); font-size:8.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink5); }
+.foot-links{ display:flex; gap:24px; flex-wrap:wrap; }
+.foot-links a{ font-family:var(--M); font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink5); text-decoration:none; transition:color .18s; }
+.foot-links a:hover{ color:var(--ink); }
+.foot-legal{ font-family:var(--M); font-size:8.5px; line-height:1.85; letter-spacing:.01em; color:var(--ink5); border-top:1px solid var(--rule2); padding-top:20px; max-width:920px; }
+
+/* ============ MODAL ============ */
+.modal-overlay{ position:fixed; inset:0; background:rgba(10,10,10,.6); backdrop-filter:blur(3px); z-index:900; display:none; align-items:flex-start; justify-content:center; padding:64px 20px; overflow-y:auto; opacity:0; transition:opacity .32s var(--ease); }
+.modal-overlay.open{ display:flex; }
+.modal-overlay.show{ opacity:1; }
+.modal{ background:var(--paper); width:100%; max-width:560px; border:1px solid var(--rule); position:relative; box-shadow:var(--sh-lg); transform:translateY(14px) scale(.98); opacity:0; transition:transform .39s var(--ease), opacity .39s var(--ease); }
+.modal-overlay.show .modal{ transform:translateY(0) scale(1); opacity:1; }
+.modal-head{ padding:28px 32px; border-bottom:1px solid var(--rule); display:flex; justify-content:space-between; align-items:flex-start; }
+.modal-title{ font-family:var(--D); font-size:29px; color:var(--ink); }
+.modal-sub{ font-family:var(--M); font-size:11px; color:var(--ink4); margin-top:6px; }
+.modal-close{ background:none; border:none; cursor:pointer; font-size:22px; color:var(--ink4); line-height:1; padding:4px; transition:color .2s, transform .2s; }
+.modal-close:hover{ color:var(--ink); transform:rotate(90deg); }
+.modal-body{ padding:28px 32px 32px; }
+.field{ margin-bottom:19px; }
+.field label{ display:block; font-family:var(--M); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink5); margin-bottom:8px; }
+.field input, .field select, .field textarea{ width:100%; font-family:var(--S); font-size:14.5px; color:var(--ink); background:var(--paper2); border:1px solid var(--rule); border-bottom-width:2px; padding:11px 14px; transition:border-color .2s, background .2s; }
+.field input:focus, .field select:focus, .field textarea:focus{ outline:none; border-color:var(--accent); background:var(--paper); }
+.field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.modal-submit{ width:100%; font-family:var(--M); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--paper); background:var(--ink); padding:17px; border:none; cursor:pointer; margin-top:6px; transition:background .2s, transform .2s; }
+.modal-submit:hover{ background:var(--accent); transform:translateY(-1px); }
+.modal-note{ font-family:var(--M); font-size:9px; color:var(--ink5); line-height:1.7; margin-top:16px; text-align:center; }
+.modal-status{ font-family:var(--M); font-size:11px; line-height:1.7; padding:14px 16px; margin-top:16px; display:none; }
+.modal-status.show{ display:block; }
+.modal-status.ok{ background:rgba(19,122,84,.08); border:1px solid rgba(19,122,84,.3); color:var(--green); }
+.modal-status.fallback{ background:rgba(154,91,10,.08); border:1px solid rgba(154,91,10,.3); color:var(--amber); }
+
+/* reveal-on-scroll, staggered via inline --d */
+.reveal{ opacity:0; transform:translateY(20px); transition:opacity 1.04s var(--ease) var(--d,0s), transform 1.04s var(--ease) var(--d,0s); }
+.reveal.in{ opacity:1; transform:translateY(0); }
+/* cards that combine a scroll-reveal entrance with their own hover transition need both listed together, since a bare .reveal transition would otherwise silently override background/box-shadow on hover */
+.pillar.reveal, .SC.reveal{ transition: opacity 1.04s var(--ease) var(--d,0s), transform 1.04s var(--ease) var(--d,0s), background .2s, box-shadow .2s; }
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:900px){
+  .npills{ display:none; }
+  .nburger{ display:block; }
+  .ghost-num{ display:none; }
+  .trust-strip{ grid-template-columns:1fr; }
+  .ts-cell{ border-right:none; border-bottom:1px solid var(--rule); }
+  .pillars, .G2, .field-row, .SG4, .pipeline, .report-body{ grid-template-columns:1fr; }
+  .onto, .flow-row{ grid-template-columns:1fr; }
+  .onto-arr, .flow-arrow, .pl-arrow-row{ display:none; }
+  .event-row{ grid-template-columns:1fr; gap:3px; }
+  .event-row .k{ white-space:normal; }
+  .proof-grid{ grid-template-columns:1fr; }
+  .W{ padding:0 24px; }
+  nav{ padding:0 20px; }
+  .pq-inner{ padding-left:22px; }
+  .pq-inner::before{ font-size:80px; top:-30px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav id="siteNav">
+  <a href="#hero" class="nid">PYPER<sup>3</sup></a>
+  <div class="npills">
+    <a class="np" data-nav="aegis" href="#aegis">AEGIS</a>
+    <a class="np" data-nav="docs" href="#docs">Docs</a>
+    <a class="np" data-nav="evidence" href="#evidence">Research</a>
+    <a class="np" data-nav="platform" href="#platform">Platform</a>
+    <a class="np" data-nav="company" href="#company">Company</a>
+    <button class="ncta" onclick="openTrialModal('nav')">Request Access</button>
+  </div>
+  <button class="nburger" onclick="openTrialModal('nav')" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner W">
+    <div class="hero-eyebrow"><span class="dot"></span>AEGIS BY PYPER<sup style="top:-4px;position:relative;margin-left:-0.22em;letter-spacing:normal;">3</sup></div>
+    <h1 class="hero-h">Know when training is heading toward <span class="flag">failure</span>.</h1>
+    <p class="hero-sub">AEGIS is built to detect emerging training instability from internal training dynamics.</p>
+    <p class="hero-support">Run the detection-only Trial inside your own environment. No training data leaves your infrastructure. No intervention capability.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="openTrialModal('hero')">Request Early Access</button>
+      <a class="btn-secondary" href="#evidence">View the Evidence</a>
+      <a class="link-tert" href="#docs">Read the Docs →</a>
+    </div>
+  </div>
+
+  <div class="proof-grid W">
+    <div class="chart-wrap" id="chartWrap">
+      <div class="chart-head">
+        <div class="chart-label">Illustrative training-run timeline</div>
+        <div class="chart-tag">Not a specific validated run</div>
+      </div>
+      <svg class="chart-svg" viewBox="0 0 760 420" preserveAspectRatio="none" role="img" aria-label="Illustrative chart comparing when AEGIS detects instability versus when standard loss monitoring shows a problem">
+        <defs>
+          <linearGradient id="signalFade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity=".18"></stop>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"></stop>
+          </linearGradient>
+        </defs>
+        <!-- gridlines -->
+        <g opacity=".7">
+          <line x1="0" y1="90" x2="760" y2="90" stroke="var(--rule2)" stroke-width="1"></line>
+          <line x1="0" y1="180" x2="760" y2="180" stroke="var(--rule2)" stroke-width="1"></line>
+          <line x1="0" y1="270" x2="760" y2="270" stroke="var(--rule2)" stroke-width="1"></line>
+          <line x1="0" y1="360" x2="760" y2="360" stroke="var(--rule2)" stroke-width="1"></line>
+        </g>
+        <!-- warning window band -->
+        <rect class="cband" x="190" y="26" width="240" height="364" fill="var(--accent-soft)"></rect>
+        <!-- area fill under the AEGIS signal curve -->
+        <path class="carea" pathLength="1000" d="M14,340 C120,339 190,335 230,322 C300,298 360,220 420,150 C460,110 490,80 525,60 L525,390 L14,390 Z" fill="url(#signalFade)"></path>
+        <!-- baseline / existing monitoring: flat, then a late sharp spike -->
+        <path class="cpath" pathLength="1000" d="M14,300 C160,297 300,294 400,290 C440,288 460,255 475,190 C486,140 498,66 508,38" stroke="var(--red)"></path>
+        <!-- AEGIS internal signal: rises early and gently, well ahead of the spike -->
+        <path class="cpath sig" pathLength="1000" d="M14,340 C120,339 190,335 230,322 C300,298 360,220 420,150 C460,110 490,80 525,60" stroke="var(--accent)" style="transition-delay:.3s;"></path>
+        <!-- markers -->
+        <g class="cmark" style="transition-delay:2.6s;">
+          <line x1="230" y1="26" x2="230" y2="390" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 4" opacity=".6"></line>
+          <circle class="pulse" cx="230" cy="322" r="4.5" fill="var(--accent)"></circle>
+        </g>
+        <g class="cmark" style="transition-delay:3.1s;">
+          <line x1="475" y1="26" x2="475" y2="390" stroke="var(--red)" stroke-width="1" stroke-dasharray="3 4" opacity=".6"></line>
+          <circle cx="475" cy="190" r="4.5" fill="var(--red)"></circle>
+        </g>
+      </svg>
+      <div class="chart-axis">Training steps →</div>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><span class="chart-legend-swatch sig"></span>AEGIS internal signal</div>
+        <div class="chart-legend-item"><span class="chart-legend-swatch base"></span>Existing loss monitoring</div>
+        <div class="chart-legend-item"><span class="chart-legend-swatch win"></span>Warning window</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="chart-head">
+        <div class="chart-label">Estimate Your Exposure</div>
+      </div>
+      <div class="calc-hint">Your numbers, not ours. Edit these to match your environment.</div>
+      <div class="calc-field">
+        <label for="calc-gpus">GPUs per run</label>
+        <input id="calc-gpus" type="number" min="0" value="8">
+      </div>
+      <div class="calc-field">
+        <label for="calc-rate">Cost per GPU-hour, USD</label>
+        <input id="calc-rate" type="number" min="0" step="0.1" value="2.50">
+      </div>
+      <div class="calc-field">
+        <label for="calc-hours">Hours wasted per failed run</label>
+        <input id="calc-hours" type="number" min="0" value="18">
+      </div>
+      <div class="calc-field">
+        <label for="calc-freq">Failed or degraded runs per month</label>
+        <input id="calc-freq" type="number" min="0" value="3">
+      </div>
+      <div class="calc-out">
+        <div class="calc-out-row">
+          <div class="calc-out-label">Estimated monthly cost of failed or degraded runs</div>
+          <div class="calc-out-num" id="calcMonthly">$0</div>
+        </div>
+      </div>
+      <div class="calc-note">This is your own exposure, based on your inputs above. How much of it is detectable before the damage compounds is what the AEGIS Trial measures on your workload, not a percentage we apply for you.</div>
+    </div>
+  </div>
+
+  <div class="trust-strip">
+    <div class="ts-cell"><div class="ts-num t count" data-target="1308" data-decimals="0">1,308</div><div class="ts-label">Training runs, historical dataset<br>4 model families · earlier implementation</div></div>
+    <div class="ts-cell"><div class="ts-num g">5/5</div><div class="ts-label">Fresh-seed detection passes<br>Prospective validation · current detector</div></div>
+    <div class="ts-cell"><div class="ts-num a">USPTO</div><div class="ts-label">U.S. provisional, filed May 2026<br>Plus CIPO application, filed Aug 2026</div></div>
+  </div>
+</section>
+
+<!-- ============ RISK REVERSAL ============ -->
+<section id="try" data-step="02">
+  <span class="ghost-num">02</span>
+  <div class="W SH SB reveal">
+    <div class="SK">Risk Reversal</div>
+    <h2 class="ST">Don't trust our claims.<br>Test them.</h2>
+    <p>Run AEGIS Trial against your own training workloads. It observes training dynamics and reports detected events for your review. It cannot change your training run, full stop.</p>
+    <p>The job here is simple: installing AEGIS should feel like trying a developer tool, not signing off on an institutional decision.</p>
+    <div class="pillars">
+      <div class="pillar reveal" style="--d:.05s">
+        <div class="pillar-mark">01 · Local</div>
+        <div class="pillar-name">Runs inside your infrastructure.</div>
+        <div class="pillar-desc">AEGIS Trial executes locally. It does not phone home with your weights, activations, gradients, or training data.</div>
+      </div>
+      <div class="pillar reveal" style="--d:.14s">
+        <div class="pillar-mark">02 · Passive</div>
+        <div class="pillar-name">Detection-only. No intervention.</div>
+        <div class="pillar-desc">The Trial artifact contains no intervention capability. It cannot touch gradients, optimizer state, checkpoints, or execution.</div>
+      </div>
+      <div class="pillar reveal" style="--d:.23s">
+        <div class="pillar-mark">03 · No obligation</div>
+        <div class="pillar-name">Run it. Keep it, or remove it.</div>
+        <div class="pillar-desc">A bounded evaluation on your own workload. If the signal is useful, we talk. If it isn't, uninstall it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTEGRATION ============ -->
+<section id="docs" data-step="03">
+  <span class="ghost-num">03</span>
+  <div class="W SH SB reveal">
+    <div class="SK">Integration</div>
+    <h2 class="ST">Integrate in minutes, not days.</h2>
+    <p>The docs are built for engineers and for agentic coding tools. Hand AEGIS's documentation and your existing training loop to Claude Code, Codex, Cursor, or another coding agent, and the basic hooks go in fast.</p>
+    <div class="code-block">
+      <div class="code-head">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="code-tag">AegisMonitor · aegis-trial-sdk</span>
+        <button class="code-copy" onclick="copyCode()">Copy</button>
+      </div>
+      <pre class="code-body" id="codeSample"><span class="c-com"># install</span>
+pip install aegis-trial-sdk
+<span class="c-com"># live detection also needs a compatible aegis-trial-core wheel,</span>
+<span class="c-com"># supplied separately after Trial approval</span>
+
+<span class="c-com"># integrate</span>
+<span class="c-kw">from</span> aegis <span class="c-kw">import</span> AegisMonitor
+
+monitor = <span class="c-fn">AegisMonitor</span>(model=model)
+
+<span class="c-kw">for</span> step <span class="c-kw">in</span> range(1, total_steps + 1):
+    monitor.<span class="c-fn">begin_step</span>(step)
+    ...
+    loss.backward()
+    optimizer.step()
+    event = monitor.<span class="c-fn">end_step</span>(loss=loss)
+    <span class="c-com"># event.detected, event.anomaly_state, event.detection_confidence</span><span class="code-cursor"></span></pre>
+    </div>
+    <p style="font-size:13px; color:var(--ink4);">This mirrors the public demo's actual training loop. A dependency-free preview mode is also available, it simulates telemetry without loading a model or Trial Core.</p>
+    <div style="display:flex; gap:24px; flex-wrap:wrap;">
+      <a class="link-tert" href="https://github.com/PYPER3/aegis-trial-sdk">View the source on GitHub →</a>
+      <a class="link-tert" href="#" onclick="openTrialModal('docs'); return false;">Request Trial access for the core wheel and full quickstart →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAPABILITIES ============ -->
+<section id="aegis" data-step="04">
+  <span class="ghost-num">04</span>
+  <div class="W SH SB reveal">
+    <div class="SK">What the Trial Does</div>
+    <h2 class="ST">Observe without giving up control.</h2>
+    <p>This isn't just documentation. It's the core of what the Trial promises.</p>
+    <div class="G2">
+      <div class="GC can">
+        <div class="GCt">AEGIS Trial can</div>
+        <ul>
+          <li>Observe approved training telemetry</li>
+          <li>Detect AEGIS events</li>
+          <li>Report event severity</li>
+          <li>Surface event timing</li>
+          <li>Surface detections for operator review</li>
+          <li>Generate an evaluation report</li>
+        </ul>
+      </div>
+      <div class="GC cannot">
+        <div class="GCt">AEGIS Trial cannot</div>
+        <ul>
+          <li>Change gradients</li>
+          <li>Modify optimizer state</li>
+          <li>Alter checkpoints</li>
+          <li>Change learning rate</li>
+          <li>Stop or restart training</li>
+          <li>Automatically intervene</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sec-disclosure">
+      <summary class="link-tert">View Security Architecture <span class="chev">→</span></summary>
+      <div class="sec-body">
+        <ul>
+          <li>Runs inside your own infrastructure. Nothing is uploaded as part of normal Trial operation.</li>
+          <li>No weights, activations, gradients, or training data leave your environment.</li>
+          <li>The Trial build ships with no intervention capability. It cannot touch gradients, optimizer state, checkpoints, learning rate, or execution.</li>
+          <li>The proprietary detection logic is distributed as a separately-supplied compiled wheel (aegis-trial-core), not exposed in the public SDK.</li>
+          <li>Full AEGIS's intervention capability, when licensed, is policy-controlled and bounded per client.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ SHOW THE SIGNAL ============ -->
+<section data-step="05">
+  <span class="ghost-num">05</span>
+  <div class="W SH SB reveal">
+    <div class="SK">The Product, In Practice</div>
+    <h2 class="ST">See the event before the damage compounds.</h2>
+    <p>AEGIS watches internal training telemetry for a training-state transition. In a prospective study, it distinguished a synthetic induced event from clean controls, using a threshold frozen before the run started.</p>
+    <div class="event-card" id="eventCard">
+      <div class="event-head">
+        <span class="event-title"><span class="rec"></span>AEGIS Event Detected</span>
+        <span class="event-status">Prospective study result</span>
+      </div>
+      <div class="event-body">
+        <div class="event-row" style="transition-delay:.05s"><span class="k">Study</span><span class="v">Five-fresh-seed exact-prefix validation</span></div>
+        <div class="event-row" style="transition-delay:.1s"><span class="k">Seed</span><span class="v">74209</span></div>
+        <div class="event-row" style="transition-delay:.15s"><span class="k">Event</span><span class="v hl">Synthetic induced transition</span></div>
+        <div class="event-divider"></div>
+        <div class="event-row" style="transition-delay:.2s"><span class="k">Clean control arm</span><span class="v">No rings detected</span></div>
+        <div class="event-row" style="transition-delay:.25s"><span class="k">Event arm</span><span class="v hl">Rings detected, steps 176-178</span></div>
+        <div class="event-row" style="transition-delay:.3s"><span class="k">Operational contract</span><span class="v hl">Passed, 5 of 5 fresh seeds</span></div>
+        <div class="event-divider"></div>
+        <div class="event-row" style="transition-delay:.35s"><span class="k">Action taken</span><span class="v">None. Detection-only study.</span></div>
+      </div>
+      <div class="event-foot">Real result from a prospective, frozen-threshold study against synthetic induced events. Five seeds; a bounded validation, not yet a large-scale production claim.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PULL QUOTE ============ -->
+<section class="pull-quote">
+  <div class="W reveal">
+    <div class="pq-inner">
+      <div class="pq-text">Some training failures are preceded by detectable changes in internal training dynamics.</div>
+      <div class="pq-cite">The premise AEGIS is built to test</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVIDENCE ============ -->
+<section id="evidence" data-step="06">
+  <span class="ghost-num">06</span>
+  <div class="W SH SB reveal">
+    <div class="SK">Evidence</div>
+    <h2 class="ST">Built on observed training behavior,<br>not a theoretical promise.</h2>
+    <p>Every claim below is labeled at the confidence level it has actually earned, and grouped by what it actually validates: the current Trial's detection, Full AEGIS's controlled intervention, or an earlier implementation's historical benchmark. Nothing here is presented as a universal guarantee.</p>
+
+    <div class="ev-tier">
+      <div class="ev-tier-label"><span class="ev-dot accent"></span>Detection evidence · what the current Trial measures</div>
+      <div class="SG4" style="grid-template-columns:repeat(2,1fr);">
+        <div class="SC reveal">
+          <div class="SN a">5/5</div>
+          <div class="SL">Fresh-seed validation passes</div>
+          <div class="SS">Prospective study · frozen threshold, fixed before the run · vs. clean exact-prefix controls</div>
+        </div>
+        <div class="SC reveal">
+          <div class="SN g">0</div>
+          <div class="SL">False triggers in the clean control arm</div>
+          <div class="SS">Same five-seed study · e.g. seed 74209: no rings in the clean arm, event rings at steps 176-178</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ev-tier">
+      <div class="ev-tier-label"><span class="ev-dot teal"></span>Governance evidence · what Full AEGIS adds</div>
+      <div class="SC reveal" style="border:1px solid var(--rule); margin-bottom:14px;">
+        <div class="SN t">4/4</div>
+        <div class="SL">Controlled runs where AEGIS localized and quarantined the faulty worker</div>
+        <div class="SS">Worker-local fault study · downstream benefit positive in all four · directional confirmation, not a statistical-significance claim</div>
+      </div>
+      <div class="bar-compare" id="barCompare">
+        <div class="bar-compare-head">Gradient quarantine · first smoke run vs. theoretical ceiling</div>
+        <div class="bar-row">
+          <div class="bar-row-label"><span>First smoke run · full exclusion</span><span class="num">58.3%</span></div>
+          <div class="bar-track"><div class="bar-fill smoke"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-row-label"><span>Theoretical maximum · perfect oracle exclusion</span><span class="num">98.6%</span></div>
+          <div class="bar-track"><div class="bar-fill oracle"></div></div>
+        </div>
+        <div class="bar-compare-foot">58.3% reaches 59% of the oracle ceiling on the first single-run smoke test. Superseded above by the rank-balanced 4/4 confirmation across seeds.</div>
+      </div>
+      <div class="CL">
+        <div class="CLt">Two of the four runs above carry a numerical-repeatability qualification, noted here rather than folded into the headline number. Four independent seed-level wins are compelling directional replication, not a conventional statistical-significance claim.</div>
+        <div class="CLd">Anti-hallucination protocol · confidence tier: directional</div>
+      </div>
+    </div>
+
+    <div class="ev-tier">
+      <div class="ev-tier-label"><span class="ev-dot amber"></span>Historical evidence · an earlier AEGIS implementation</div>
+      <div class="SG4" style="grid-template-columns:repeat(2,1fr);">
+        <div class="SC reveal">
+          <div class="SN amb count" data-target="4.31" data-decimals="2" data-suffix="%">4.31%</div>
+          <div class="SL">Wall-clock reduction, replicated</div>
+          <div class="SS">Qwen-1.7B / FineWeb-Edu · 10 seeds · earlier AEGIS intervention implementation · not shown to outperform a lower-learning-rate control</div>
+        </div>
+        <div class="SC reveal">
+          <div class="SN count" data-target="1308" data-decimals="0">1,308</div>
+          <div class="SL">Training runs in the historical dataset</div>
+          <div class="SS">4 model families · broader context from the same earlier implementation · not the basis for the 4.31% figure specifically, and not a validation of the current detector</div>
+        </div>
+      </div>
+      <p style="font-size:13px; color:var(--ink4); margin-top:14px;">An earlier vision-domain test (ResNet-50 / CIFAR-10) showed an early signal from this implementation. A later calibration pass found the frozen detector unreliable across seeds, so it isn't presented here as a confirmed result.</p>
+    </div>
+
+    <div class="CL" id="methodology">
+      <div class="CLt">Known boundaries: the 4.31% figure came from an earlier AEGIS implementation and hasn't been shown to outperform a simple lower-learning-rate control, so it's kept as historical context, not the economic case for the Trial. The worker-localization result is real, controlled, and directional, four seeds is compelling replication, not a conventional significance claim. The five-seed detection study is prospective and synthetic. Nothing here is presented as broader than the study that produced it.</div>
+      <div class="CLd">Anti-hallucination protocol · confirmed, directional, and historical claims kept separate</div>
+    </div>
+    <a class="link-tert" href="#methodology">See methodology →</a>
+  </div>
+</section>
+
+<!-- ============ TRIAL REPORT ============ -->
+<section data-step="07">
+  <span class="ghost-num">07</span>
+  <div class="W SH SB reveal">
+    <div class="SK">What You Get Back</div>
+    <h2 class="ST">Your AEGIS Trial report.</h2>
+    <p>At the end of a Trial, AEGIS generates an evaluation report built from your own runs, not ours.</p>
+    <div class="report-card">
+      <div class="report-head">
+        <span class="report-title">Sample Trial Report</span>
+        <span class="report-illustrative">Illustrative layout · populated from your data</span>
+      </div>
+      <div class="report-body">
+        <div class="report-cell"><div class="report-num count" data-target="14" data-decimals="0">14</div><div class="report-lbl">Runs monitored</div></div>
+        <div class="report-cell"><div class="report-num count" data-target="7" data-decimals="0">7</div><div class="report-lbl">Events detected</div></div>
+        <div class="report-cell"><div class="report-num count" data-target="5" data-decimals="0">5</div><div class="report-lbl">Preceded real degradation</div></div>
+        <div class="report-cell"><div class="report-num count" data-target="412" data-decimals="0">412</div><div class="report-lbl">Median lead, in steps</div></div>
+        <div class="report-cell"><div class="report-num count" data-target="3" data-decimals="0">3</div><div class="report-lbl">Caught before existing alerting</div></div>
+      </div>
+      <div class="report-foot">The question a Trial answers isn't "did AEGIS save compute." It's: <strong>what did AEGIS show you that your existing monitoring didn't?</strong></div>
+    </div>
+    <button class="btn-secondary" onclick="openTrialModal('report')" style="cursor:pointer;">Evaluate Full AEGIS</button>
+  </div>
+</section>
+
+<!-- ============ FULL AEGIS ============ -->
+<section data-step="08">
+  <span class="ghost-num">08</span>
+  <div class="W SH SB reveal">
+    <div class="SK">Beyond the Trial</div>
+    <h2 class="ST">Detection is only the first step.</h2>
+    <div class="flow-row">
+      <div class="flow-cell">
+        <div class="flow-tag">AEGIS Trial</div>
+        <div class="flow-name">Observe.</div>
+        <div class="flow-desc">Detection-only. Local. No intervention capability. Free.</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-cell lead">
+        <div class="flow-tag">Full AEGIS</div>
+        <div class="flow-name a">Detect. Govern. Intervene.</div>
+        <div class="flow-desc">The commercial system supports bounded, policy-controlled intervention, configured to your workflow and risk tolerance.</div>
+      </div>
+    </div>
+    <p>The full system runs on a two-stage protection ontology, designed to reduce false positives by requiring corroborating evidence before anything touches your training run:</p>
+    <div class="onto">
+      <div class="onto-step s1">
+        <div class="onto-num">01</div>
+        <div class="onto-head a">Signal</div>
+        <div class="onto-body">Internal telemetry detects a training-state transition. Governance arms, without disrupting the run.</div>
+      </div>
+      <div class="onto-arr">→</div>
+      <div class="onto-step s2">
+        <div class="onto-num">02</div>
+        <div class="onto-head t">Confirmation</div>
+        <div class="onto-body">Immediate performance evidence is checked for corroboration that the detected transition is associated with degradation.</div>
+      </div>
+      <div class="onto-arr">→</div>
+      <div class="onto-step s3">
+        <div class="onto-num">03</div>
+        <div class="onto-head g">Action</div>
+        <div class="onto-body">Only when both stages fire does intervention begin. The method is configurable per client.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLATFORM ============ -->
+<section id="platform" data-step="09">
+  <span class="ghost-num">09</span>
+  <div class="W SH SB reveal">
+    <div class="SK">The Platform</div>
+    <h2 class="ST">AEGIS is one layer of Pyper<sup>3</sup>.</h2>
+    <p>Pyper³ is building training-governance infrastructure across the AI development lifecycle. AEGIS is the production entry point, with replicated results behind it. The rest of the pipeline is labeled at the maturity it has actually earned.</p>
+    <div class="pipeline">
+      <div class="pl">
+        <div class="pl-status early">Early Pilot</div>
+        <div class="pl-name">RE:F/NED</div>
+        <div class="pl-desc">Govern what enters. Pre-ingestion data quality scoring, before training starts.</div>
+      </div>
+      <div class="pl lead">
+        <div class="pl-status confirmed">Confirmed · Early access</div>
+        <div class="pl-name">AEGIS</div>
+        <div class="pl-desc">Govern what forms. Real-time governance on training dynamics, inside the run.</div>
+      </div>
+      <div class="pl">
+        <div class="pl-status build">In Build</div>
+        <div class="pl-name">conxiOS</div>
+        <div class="pl-desc">Govern what emerges. Inference-layer alignment, downstream of training.</div>
+      </div>
+      <div class="pl">
+        <div class="pl-status research">Research</div>
+        <div class="pl-name">I:AM</div>
+        <div class="pl-desc">Govern longitudinal agency preservation. An influence-aware mediator.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPANY / FINAL CTA ============ -->
+<section id="company" class="final-cta reveal">
+  <div class="W" style="text-align:center;">
+    <div class="SK">Get Started</div>
+    <h2 class="ST">See what AEGIS finds<br>in your training run.</h2>
+    <p class="hero-sub">Free. Local. Detection-only.</p>
+    <div class="final-cta-btns">
+      <button class="btn-primary" onclick="openTrialModal('final')">Request Early Access</button>
+      <a class="btn-secondary" href="#docs">Read the Docs</a>
+    </div>
+    <div class="final-reassure">No weights, activations, gradients, or training data leave your environment.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-top">
+    <div class="fi">© 2026 Pyper³. All rights reserved.</div>
+    <div class="foot-links">
+      <a href="#docs">Docs</a>
+      <a href="#evidence">Research</a>
+      <a href="#platform">Platform</a>
+      <a href="#aegis">Security</a>
+      <a href="mailto:hello@pyper3.com">hello@pyper3.com</a>
+    </div>
+  </div>
+  <div class="foot-legal">
+    Pyper³ is a trade name of 1001692931 Ontario Inc., the joint venture between ZeroThreeSixNine Ventures Inc. and Arca Futura LLC. AEGIS, RE:F/NED, conxiOS, I:AM, and Pyper³ are trademarks of ZeroThreeSixNine Ventures Inc. and Arca Futura LLC. AEGIS: U.S. provisional patent application No. 64/057,941, filed May 5, 2026, and Canadian patent application filed with CIPO (No. 3322107), filed August 2026. conxiOS and RE:F/NED: USPTO provisional filing with PCT international filing, filed January 2026. Patent pending status describes a filing and does not guarantee issuance. Evidence figures on this site are labeled confirmed, directional, or in development as described in Research, and are not guarantees of results for any specific workload. All inquiries: <a href="mailto:hello@pyper3.com" style="color:var(--ink4);">hello@pyper3.com</a>.
+  </div>
+</footer>
+
+<!-- ============ TRIAL REQUEST MODAL ============ -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modalTitle">Request AEGIS Trial</div>
+        <div class="modal-sub">Free · local · detection-only · no obligation</div>
+      </div>
+      <button class="modal-close" onclick="closeTrialModal()" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="trialForm">
+        <div class="field-row">
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input id="f-name" name="name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="f-email">Work email</label>
+            <input id="f-email" name="email" type="email" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-company">Company</label>
+            <input id="f-company" name="company" type="text" required>
+          </div>
+          <div class="field">
+            <label for="f-role">Role</label>
+            <select id="f-role" name="role">
+              <option>ML Engineer</option>
+              <option>ML Platform / Infra Lead</option>
+              <option>CTO / Head of AI</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-stack">Training stack</label>
+            <input id="f-stack" name="stack" type="text" placeholder="e.g. PyTorch + DDP">
+          </div>
+          <div class="field">
+            <label for="f-scale">GPU scale</label>
+            <select id="f-scale" name="scale">
+              <option>Single GPU</option>
+              <option>Single node, multi-GPU</option>
+              <option>Multi-node / distributed</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-msg">What do you want to evaluate? The training problem you're pointing this at</label>
+          <textarea id="f-msg" name="message" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="modal-submit">Request Trial Access</button>
+        <div class="modal-status" id="modalStatus"></div>
+        <div class="modal-note">No weights, activations, gradients, or training data leave your environment. We review each request and follow up by email with Trial Core access and terms.</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   TRIAL SIGNUP WIRING
+   ========================================================================== */
+const TRIAL_SIGNUP_ENDPOINT = ""; // e.g. "https://pyper3-api.up.railway.app/trial-signup"
+const FALLBACK_EMAIL = "hello@pyper3.com";
+
+function openTrialModal(source){
+  const overlay = document.getElementById('modalOverlay');
+  overlay.classList.add('open');
+  requestAnimationFrame(() => overlay.classList.add('show'));
+  document.getElementById('modalStatus').classList.remove('show','ok','fallback');
+  document.body.style.overflow = 'hidden';
+  const first = document.getElementById('f-name');
+  if(first) first.focus();
+  if(window.dataLayer){ window.dataLayer.push({event:'trial_modal_open', source: source || 'unknown'}); }
+}
+function closeTrialModal(){
+  const overlay = document.getElementById('modalOverlay');
+  overlay.classList.remove('show');
+  document.body.style.overflow = '';
+  setTimeout(() => overlay.classList.remove('open'), 320);
+}
+document.getElementById('modalOverlay').addEventListener('click', function(e){
+  if(e.target === this) closeTrialModal();
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeTrialModal();
+});
+
+document.getElementById('trialForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const status = document.getElementById('modalStatus');
+  const data = Object.fromEntries(new FormData(e.target).entries());
+
+  if(TRIAL_SIGNUP_ENDPOINT){
+    try{
+      const res = await fetch(TRIAL_SIGNUP_ENDPOINT, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('Request failed');
+      status.textContent = "Request received. We'll email install instructions shortly.";
+      status.className = 'modal-status show ok';
+      e.target.reset();
+      return;
+    }catch(err){
+      // fall through to email fallback below
+    }
+  }
+
+  const subject = encodeURIComponent('AEGIS Trial request: ' + (data.company || data.name));
+  const body = encodeURIComponent(
+    'Name: ' + data.name + '\n' +
+    'Email: ' + data.email + '\n' +
+    'Company: ' + data.company + '\n' +
+    'Role: ' + data.role + '\n' +
+    'Training stack: ' + data.stack + '\n' +
+    'GPU scale: ' + data.scale + '\n' +
+    'Notes: ' + (data.message || '(none)')
+  );
+  window.location.href = 'mailto:' + FALLBACK_EMAIL + '?subject=' + subject + '&body=' + body;
+  status.textContent = "Opening an email to " + FALLBACK_EMAIL + " with your details (backend not wired yet).";
+  status.className = 'modal-status show fallback';
+});
+
+function copyCode(){
+  const el = document.getElementById('codeSample');
+  navigator.clipboard.writeText(el.innerText).catch(function(){});
+}
+
+/* ============ COUNT-UP FIGURES ============ */
+function animateCount(el){
+  const target = parseFloat(el.dataset.target);
+  const decimals = parseInt(el.dataset.decimals || '0', 10);
+  const suffix = el.dataset.suffix || '';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduceMotion){
+    el.textContent = target.toLocaleString(undefined, {minimumFractionDigits:decimals, maximumFractionDigits:decimals}) + suffix;
+    return;
+  }
+  const duration = 2080;
+  const start = performance.now();
+  function frame(now){
+    const p = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const val = target * eased;
+    el.textContent = val.toLocaleString(undefined, {minimumFractionDigits:decimals, maximumFractionDigits:decimals}) + suffix;
+    if(p < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ============ EXPOSURE CALCULATOR ============ */
+function formatUSD(n){
+  if(!isFinite(n)) n = 0;
+  return '$' + Math.max(0, Math.round(n)).toLocaleString();
+}
+function recalcExposure(){
+  const gpus  = parseFloat(document.getElementById('calc-gpus').value)  || 0;
+  const rate  = parseFloat(document.getElementById('calc-rate').value)  || 0;
+  const hours = parseFloat(document.getElementById('calc-hours').value) || 0;
+  const freq  = parseFloat(document.getElementById('calc-freq').value)  || 0;
+  const monthly = gpus * rate * hours * freq;
+  document.getElementById('calcMonthly').textContent = formatUSD(monthly);
+}
+
+/* ============ SCROLL OBSERVERS ============ */
+document.addEventListener('DOMContentLoaded', function(){
+
+  // shareable direct link: pyper3.com/#request-trial opens the Trial form straight away,
+  // gives outbound emails/links a clean destination without a dedicated page to maintain
+  if(window.location.hash === '#request-trial'){
+    openTrialModal('direct-link');
+  }
+
+  document.querySelectorAll('#calc-gpus, #calc-rate, #calc-hours, #calc-freq').forEach(function(inp){
+    inp.addEventListener('input', recalcExposure);
+  });
+  recalcExposure();
+
+  // orphan / widow fix: push the last two words of key text elements together
+  function fixOrphans(el){
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let lastNode = null, node;
+    while(node = walker.nextNode()){ if(node.textContent.trim().length) lastNode = node; }
+    if(lastNode){
+      const text = lastNode.textContent;
+      const idx = text.lastIndexOf(' ');
+      if(idx > -1 && !text.slice(idx+1).includes('\u00A0')){
+        lastNode.textContent = text.slice(0, idx) + '\u00A0' + text.slice(idx+1);
+      }
+    }
+  }
+  document.querySelectorAll('h1,h2,h3,.hero-sub,.hero-support,p,li,.pillar-desc,.flow-desc,.onto-body,.GCd,.CLt,.report-foot,.final-reassure,.SL,.pq-text,.bar-compare-foot,.chart-label,.pl-desc,.calc-note,.calc-hint,.calc-out-label')
+    .forEach(fixOrphans);
+
+  // stagger reveals within a section that doesn't already set --d
+  document.querySelectorAll('.pillar, .GC, .SC, .onto-step, .pl, .report-cell').forEach((el, i) => {
+    if(!el.style.getPropertyValue('--d')) el.style.setProperty('--d', (i % 4) * 0.09 + 's');
+  });
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // parallax demo: hero background layers move slower than scroll, ghost numerals
+  // drift opposite to content as they cross the viewport, both subtle on purpose
+  if(!reduceMotion){
+    const parallaxHero = [
+      {el: document.querySelector('.hero-glow'),  factor: 0.18},
+      {el: document.querySelector('.hero-glow2'), factor: 0.12},
+      {el: document.querySelector('.hero-grid'),  factor: 0.06}
+    ].filter(p => p.el);
+    const parallaxGhosts = document.querySelectorAll('.ghost-num');
+    let ticking = false;
+    function updateParallax(){
+      const y = window.scrollY;
+      parallaxHero.forEach(p => { p.el.style.transform = 'translate3d(0,' + (y * p.factor) + 'px,0)'; });
+      parallaxGhosts.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const centerOffset = (rect.top + rect.height / 2) - (window.innerHeight / 2);
+        el.style.transform = 'translate3d(0,' + (centerOffset * -0.05) + 'px,0)';
+      });
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ requestAnimationFrame(updateParallax); ticking = true; }
+    }, {passive:true});
+    updateParallax();
+  }
+
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('in'); });
+    }, {threshold: 0.12});
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    const ioOnce = (selector, cls, cb) => {
+      const el = document.querySelector(selector);
+      if(!el) return;
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            entry.target.classList.add(cls || 'in-view');
+            if(cb) cb();
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {threshold: 0.35});
+      obs.observe(el);
+    };
+
+    ioOnce('#chartWrap', 'in-view');
+    ioOnce('#eventCard', 'in-view');
+    ioOnce('#barCompare', 'in-view');
+
+    const counters = document.querySelectorAll('.count');
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){ animateCount(entry.target); cio.unobserve(entry.target); }
+      });
+    }, {threshold: 0.6});
+    counters.forEach(c => cio.observe(c));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    document.getElementById('chartWrap').classList.add('in-view');
+    document.getElementById('eventCard').classList.add('in-view');
+    document.getElementById('barCompare').classList.add('in-view');
+    document.querySelectorAll('.count').forEach(animateCount);
+  }
+
+  // nav scroll state + scrollspy
+  const nav = document.getElementById('siteNav');
+  const navLinks = document.querySelectorAll('.np[data-nav]');
+  const trackedSections = ['aegis','docs','evidence','platform','company'].map(id => document.getElementById(id)).filter(Boolean);
+
+  function onScroll(){
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }
+  onScroll();
+  window.addEventListener('scroll', onScroll, {passive:true});
+
+  if('IntersectionObserver' in window && trackedSections.length){
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          navLinks.forEach(l => l.classList.toggle('active', l.dataset.nav === entry.target.id));
+        }
+      });
+    }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
+    trackedSections.forEach(s => spy.observe(s));
+  }
+});
+</script>
+
+</body>
+</html>
